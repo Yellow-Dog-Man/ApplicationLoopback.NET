@@ -127,6 +127,10 @@ namespace ApplicationLoopback.NET
 
             if (_captureActive)
             {
+                // If it's still active, stop the capture
+                if (!_captureStopRequested)
+                    StopCapture();
+
                 // If the capture is still active (e.g. Dispose was called too soon)
                 // Let's wait for it to finish and then call it again
                 Task.Run(async () =>
