@@ -16,9 +16,6 @@ namespace ApplicationLoopback.NET
             AudioCallback callback, AudioEvent audioCaptureStopped);
 
         [DllImport("ApplicationLoopback.dll", CallingConvention = CallingConvention.StdCall)]
-        public static extern IntPtr GetCallback(IntPtr capture);
-
-        [DllImport("ApplicationLoopback.dll", CallingConvention = CallingConvention.StdCall)]
         public static extern int StartCaptureAsync(IntPtr capture, uint processId, bool includeProcessTree);
 
         [DllImport("ApplicationLoopback.dll", CallingConvention = CallingConvention.StdCall)]
