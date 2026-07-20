@@ -77,7 +77,7 @@ namespace ApplicationLoopback.NET
         {
             unsafe
             {
-                var rawData = new Span<short>(data.ToPointer(), (int)length);
+                var rawData = new Span<short>(data.ToPointer(), (int)(length / sizeof(short)));
 
                 // Convert the sample data to floats. We don't want the caller to worry about the internal formats
                 // And floats are nice way to represent audio data in agnostic way
