@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ApplicationLoopback.NET
 {
-    public delegate void AudioDataHandler(Span<float> data);
+    public delegate void AudioDataHandler(ReadOnlySpan<float> data);
     public delegate void AudioEventHandler();
 
     public class ApplicationLoopbackCapture : IDisposable

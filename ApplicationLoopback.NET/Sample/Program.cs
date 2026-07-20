@@ -25,7 +25,7 @@ capture.Dispose();
 
 await file.DisposeAsync();
 
-void Capture_NewDataAvailable(Span<float> data)
+void Capture_NewDataAvailable(ReadOnlySpan<float> data)
 {
     file.Write(MemoryMarshal.Cast<float, byte>(data));
 }
