@@ -1,30 +1,36 @@
 ﻿using ApplicationLoopback.NET;
+using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
-var callback = (AudioCallback)OnData;
-var stopped = (AudioEvent)OnStopped;
+var file = File.OpenWrite("Test.raw");
 
-var capture = Native.InitializeCapture(2, 48000, 16, callback, stopped);
-Console.WriteLine($"Created capture: {capture}");
+var capture = new ApplicationLoopbackCapture(2, 48000);
+capture.NewDataAvailable += Capture_NewDataAvailable;
+capture.CaptureStopped += Capture_CaptureStopped;
 
-var startResult = Native.StartCaptureAsync(capture, 41912, true);
+var processes = Process.GetProcesses();
+var process = processes.FirstOrDefault(p => p.ProcessName.Contains("firefox"));
 
-Console.WriteLine(startResult);
+Console.WriteLine($"Found process: {process.ProcessName} {process.Id}");
+
+capture.StartCapture(process, CaptureMode.IncludeProcessTree);
+
+Console.WriteLine("Capturing... Press Enter to stop");
+
 Console.ReadLine();
-Console.WriteLine("Stopping");
 
-Native.StopCaptureAsync(capture);
+await capture.StopCapture();
+capture.Dispose();
 
-Console.ReadLine();
+await file.DisposeAsync();
 
-Native.FreeCapture(capture);
-
-static void OnData(IntPtr instance, IntPtr data, uint length)
+void Capture_NewDataAvailable(Span<float> data)
 {
-    Console.WriteLine($"Got data: {length}");
+    file.Write(MemoryMarshal.Cast<float, byte>(data));
 }
 
-static void OnStopped(IntPtr instance)
+void Capture_CaptureStopped()
 {
-    Console.WriteLine("Audio capture stopped");
+    Console.WriteLine("Capture stopped");
 }
