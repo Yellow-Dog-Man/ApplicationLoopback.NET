@@ -3,6 +3,8 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    
+    <PackageId>YellowDogMan.ApplicationLoobpack.NET</PackageId>
   </PropertyGroup>
 
   <ItemGroup>

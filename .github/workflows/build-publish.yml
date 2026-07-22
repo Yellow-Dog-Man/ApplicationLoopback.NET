@@ -1,0 +1,29 @@
+name: 'Build and release NuGet package'
+
+on:
+  release:
+    types:
+      - published
+
+jobs:
+  build-publish:
+    name: 'Build and push NuGet'
+    runs-on: ubuntu-latest
+
+    env:
+      IS_RELEASE: true
+
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+
+      - name: 'Build NuGet'
+        uses: Yellow-Dog-Man/composite-actions-templates/.github/actions/dotnet-build@606ac289d701be7b7d90e5ff8647dedf57d6d755 # main
+        with:
+          dotnet-build-args: ${{ env.IS_RELEASE == 'true' && format('-p:Version={0} -o nupkgs', github.ref_name) || '-o nupkgs' }}
+          dotnet-project-path: 'ApplicationLoopback.NET/ApplicationLoopback.NET/ApplicationLoopback.NET.csproj'
+          dotnet-build-type: 'pack'
+
+      - name: 'Build and push NuGet'
+        uses: Yellow-Dog-Man/composite-actions-templates/.github/actions/dotnet-build-push-nuget@606ac289d701be7b7d90e5ff8647dedf57d6d755 # main
+        with:
+           dotnet-nuget-auth-token: ${{ secrets.NUGET_TOKEN }}
