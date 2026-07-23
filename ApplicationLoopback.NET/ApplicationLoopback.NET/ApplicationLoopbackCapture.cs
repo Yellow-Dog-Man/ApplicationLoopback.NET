@@ -115,7 +115,7 @@ namespace ApplicationLoopback.NET
         void CheckDisposed()
         {
             if (_disposed)
-                throw new InvalidOperationException("This instance has been disposed");
+                throw new ObjectDisposedException(GetType().Name);
         }
 
         void CheckCaptureActive()
